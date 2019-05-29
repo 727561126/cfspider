@@ -1,0 +1,16 @@
+# -*- coding: utf-8 -*-
+import scrapy
+
+
+class EastmoneySpider(scrapy.Spider):
+    name = 'eastmoney'
+    allowed_domains = ['eastmoney.com']
+    start_urls = ['http://data.eastmoney.com/zlsj/sb.html']
+
+    def parse(self, response):
+        for url in response.xpath('*').extract():
+            yield scrapy.Request(url, callback=self.parse_detail)
+        
+
+    def parse_detail(self, response):
+        print(response.xpath('//h1[@class="main-title"]/text()').extract())
